@@ -5,7 +5,10 @@
  * @todo add file description
  */
 
+namespace Drupal\php_ffmpeg;
+
 use \Doctrine\Common\Cache\Cache;
+use Drupal\Core\Cache\CacheBackendInterface;
 
 /**
  * Class FFMpegCache
@@ -15,31 +18,48 @@ use \Doctrine\Common\Cache\Cache;
 class FFMpegCache implements Cache {
 
   /**
+   * The cache backend that should be used.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cache;
+
+  /**
+   * Constructs a CacheCollector object.
+   *
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   *   The cache backend.
+   */
+  public function __construct(CacheBackendInterface $cache) {
+    $this->cache = $cache;
+  }
+
+  /**
    * @inheritdoc
    */
   public function fetch($id) {
-    return \Drupal::cache()->get($id);
+    return $this->cache->get($id);
   }
 
   /**
    * @inheritdoc
    */
   public function contains($id) {
-    return !!\Drupal::cache()->get($id);
+    return !!$this->cache->get($id);
   }
 
   /**
    * @inheritdoc
    */
   public function save($id, $data, $lifeTime = 0) {
-    \Drupal::cache()->set($id, $data, time() + $lifeTime);
+    $this->cache->set($id, $data, time() + $lifeTime);
   }
 
   /**
    * @inheritdoc
    */
   public function delete($id) {
-    \Drupal::cache()->delete($id);
+    $this->cache->delete($id);
   }
 
   /**

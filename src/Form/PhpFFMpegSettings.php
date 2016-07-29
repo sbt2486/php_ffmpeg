@@ -11,7 +11,7 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 
-class PhpFfmpegSettings extends ConfigFormBase {
+class PhpFFMpegSettings extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
@@ -46,7 +46,6 @@ class PhpFfmpegSettings extends ConfigFormBase {
   }
 
   public function buildForm(array $form, \Drupal\Core\Form\FormStateInterface $form_state) {
-    php_ffmpeg();
     $form = [];
     $form['php_ffmpeg_ffmpeg_binary'] = [
       '#type' => 'textfield',

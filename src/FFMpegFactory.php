@@ -4,6 +4,8 @@
  * Contains service for the FFMPeg API integration.
  */
 
+namespace Drupal\php_ffmpeg;
+
 /**
  * Factory class that provides a wrapper for the FFMpeg php extension.
  */
@@ -20,7 +22,7 @@ class FFMpegFactory {
       $ffmpeg = \FFMpeg\FFMpeg::create(
         $this->getFFMpegConfig(),
         \Drupal::logger('php_ffmpeg'),
-        $this->phpFFMpegProbe()
+        $this->getFFMpegProbe()
       );
     }
     return $ffmpeg;
@@ -31,7 +33,7 @@ class FFMpegFactory {
    *
    * @return \FFMpeg\FFProbe
    */
-  public function phpFFMpegProbe() {
+  public function getFFMpegProbe() {
     static $ffprobe = NULL;
     if (!$ffprobe) {
       $ffprobe = \FFMpeg\FFProbe::create(
@@ -47,6 +49,7 @@ class FFMpegFactory {
    * Provides configuration settings passed to FFMpeg classes' create methods.
    *
    * @return array
+   *   Options based on settings as required by to \FFMpeg\FFMpeg::create().
    */
   protected function getFFMpegConfig() {
     return array_filter(array(
