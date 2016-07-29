@@ -1,54 +1,5 @@
 <?php
 /**
  * @file
- * Hook implementations and shared functions for the PHP-FFMpeg module.
+ * Hook implementations functions for the PHP-FFMpeg module.
  */
-
-/**
- * Factory function for the FFMpeg object.
- *
- * @return \FFMpeg\FFMpeg
- */
-function php_ffmpeg() {
-  static $ffmpeg = NULL;
-  if (!$ffmpeg) {
-    $ffmpeg = \FFMpeg\FFMpeg::create(array_filter(array(
-      'ffmpeg.binaries'  => \Drupal::config('php_ffmpeg.settings')->get('php_ffmpeg_ffmpeg_binary'),
-      'ffprobe.binaries' => \Drupal::config('php_ffmpeg.settings')->get('php_ffmpeg_ffprobe_binary'),
-      'timeout'          => \Drupal::config('php_ffmpeg.settings')->get('php_ffmpeg_timeout'),
-      'ffmpeg.threads'   => \Drupal::config('php_ffmpeg.settings')->get('php_ffmpeg_threads'),
-    )), \Drupal::logger('php-ffmpeg'), php_ffmpeg_probe());
-  }
-  return $ffmpeg;
-}
-
-/**
- * Factory function for the FFProbe object.
- *
- * @return \FFMpeg\FFProbe
- */
-function php_ffmpeg_probe() {
-  static $ffprobe = NULL;
-  if (!$ffprobe) {
-    $ffprobe = \FFMpeg\FFProbe::create(array_filter(array(
-      'ffmpeg.binaries'  => \Drupal::config('php_ffmpeg.settings')->get('php_ffmpeg_ffmpeg_binary'),
-      'ffprobe.binaries' => \Drupal::config('php_ffmpeg.settings')->get('php_ffmpeg_ffprobe_binary'),
-      'timeout'          => \Drupal::config('php_ffmpeg.settings')->get('php_ffmpeg_timeout'),
-      'ffmpeg.threads'   => \Drupal::config('php_ffmpeg.settings')->get('php_ffmpeg_threads'),
-    )), \Drupal::logger('php_ffmpeg'), php_ffmpeg_cache());
-  }
-  return $ffprobe;
-}
-
-/**
- * Factory function for the cache to use with FFProbe instances.
- *
- * @return \Doctrine\Common\Cache\Cache
- */
-function php_ffmpeg_cache() {
-  static $cache = NULL;
-  if (!$cache) {
-    $cache = new Doctrine\Common\Cache\ApcuCache();
-  }
-  return $cache;
-}

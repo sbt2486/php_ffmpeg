@@ -1,12 +1,14 @@
 <?php
 namespace Drupal\php_ffmpeg\Tests;
 
+use Drupal\simpletest\WebTestBase;
+
 /**
- * The the PHPFFMpeg Drupal watchdog to PSR-4 logger adapter.
+ * Tests the PHPFFMpeg Drupal watchdog to PSR-4 logger adapter.
  *
  * @group php_ffmpeg
  */
-class PHPFFMpegLoggerTestCase extends \Drupal\simpletest\WebTestBase {
+class PHPFFMpegLoggerTestCase extends WebTestBase {
 
   protected $profile = 'standard';
 
