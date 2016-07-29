@@ -15,8 +15,8 @@ function php_ffmpeg_requirements($phase) {
       'severity' => REQUIREMENT_ERROR,
     );
     try {
-      $version = explode("\n", php_ffmpeg()->getFFMpegDriver()->command('-version'));
-      $requirements['php-ffmpeg']['value'] .= " (using {$version[0]})";
+      $version = explode("\n", php_ffmpeg_service()->getFFMpegDriver()->command('-version'));
+      $requirements['php-ffmpeg']['value'] = "Using {$version[0]}";
       $requirements['php-ffmpeg']['severity'] = REQUIREMENT_OK;
     }
     catch (\FFMpeg\Exception\ExecutableNotFoundException $e) {

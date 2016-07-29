@@ -16,7 +16,7 @@ class FFMpegFactory {
    *
    * @return \FFMpeg\FFMpeg
    */
-  public function getFFMPeg() {
+  public function getFFMpeg() {
     static $ffmpeg = NULL;
     if (!$ffmpeg) {
       $ffmpeg = \FFMpeg\FFMpeg::create(
