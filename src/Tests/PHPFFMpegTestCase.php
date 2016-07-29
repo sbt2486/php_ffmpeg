@@ -1,18 +1,24 @@
 <?php
+namespace Drupal\php_ffmpeg\Tests;
+
 /**
- * Test case for PHPFFMpegLogger
+ * Test the API and basic function of the PHPFFMpeg module.
+ *
+ * @group php_ffmpeg
  */
-class PHPFFMpegTestCase extends DrupalWebTestCase {
+class PHPFFMpegTestCase extends \Drupal\simpletest\WebTestBase {
+
+  protected $profile = 'standard';
 
   /**
    * {@inheritdoc}
    */
   public static function getInfo() {
-    return array(
+    return [
       'name' => 'PHPFFMpeg Module',
       'description' => 'Test the API and basic function of the PHPFFMpeg module.',
       'group' => 'PHPFFMpeg',
-    );
+    ];
   }
 
   /**
@@ -53,12 +59,12 @@ class PHPFFMpegTestCase extends DrupalWebTestCase {
     $php_ffmpeg_timeout = mt_rand(1, 42);
     $php_ffmpeg_threads = mt_rand(1, 42);
 
-    $this->drupalPost(NULL, array(
+    $this->drupalPost(NULL, [
       'php_ffmpeg_ffmpeg_binary' => $php_ffmpeg_ffmpeg_binary,
       'php_ffmpeg_ffprobe_binary' => $php_ffmpeg_ffprobe_binary,
       'php_ffmpeg_timeout' => $php_ffmpeg_timeout,
-      'php_ffmpeg_threads' => $php_ffmpeg_threads
-    ), 'Save configuration');
+      'php_ffmpeg_threads' => $php_ffmpeg_threads,
+    ], 'Save configuration');
 
     $this->assertFieldByName('php_ffmpeg_ffmpeg_binary', $php_ffmpeg_ffmpeg_binary, 'Submitting he PHP-FFMpeg settings page should update the value of the field for the ffmpeg binary path.');
     $this->assertFieldByName('php_ffmpeg_ffprobe_binary', $php_ffmpeg_ffprobe_binary, 'Submitting he PHP-FFMpeg settings page should update the value of the field for the ffprobe binary path.');
@@ -70,19 +76,19 @@ class PHPFFMpegTestCase extends DrupalWebTestCase {
     $this->assertEqual(variable_get('php_ffmpeg_timeout'), $php_ffmpeg_timeout, 'Submitting he PHP-FFMpeg settings page should update the ffmpeg command timeout.');
     $this->assertEqual(variable_get('php_ffmpeg_threads'), $php_ffmpeg_threads, 'Submitting he PHP-FFMpeg settings page should update the number of threads to use for ffmpeg commands.');
 
-    $invalidFilenames = array($this->randomName(), $this->randomName());
+    $invalidFilenames = [$this->randomName(), $this->randomName()];
 
-    $this->drupalPost(NULL, array(
+    $this->drupalPost(NULL, [
       'php_ffmpeg_ffmpeg_binary' => $invalidFilenames[0],
       'php_ffmpeg_ffprobe_binary' => $invalidFilenames[1],
       'php_ffmpeg_timeout' => $this->randomName(),
-      'php_ffmpeg_threads' => $this->randomName()
-    ), 'Save configuration');
+      'php_ffmpeg_threads' => $this->randomName(),
+    ], 'Save configuration');
 
     $this->assertText("File not found: $invalidFilenames[0]", "Submission of the the PHP-FFMpeg settings page should validate the ffmpeg binary path is an existing file.");
     $this->assertText("File not found: $invalidFilenames[1]", "Submission of the the PHP-FFMpeg settings page should validate the ffprobe binary path is an existing file.");
-    $this->assertText('The value of the Timeout field must be a positive integer.',  "Submission of the the PHP-FFMpeg settings page should validate the ffmpeg command timeout is a positive integer.");
-    $this->assertText('The value of the Threads field must be zero or a positive integer.',  "Submission of the the PHP-FFMpeg settings page should validate the ffmpeg command threads number is a positive integer.");
+    $this->assertText('The value of the Timeout field must be a positive integer.', "Submission of the the PHP-FFMpeg settings page should validate the ffmpeg command timeout is a positive integer.");
+    $this->assertText('The value of the Threads field must be zero or a positive integer.', "Submission of the the PHP-FFMpeg settings page should validate the ffmpeg command threads number is a positive integer.");
 
     $this->assertEqual(variable_get('php_ffmpeg_ffmpeg_binary'), $php_ffmpeg_ffmpeg_binary, 'Submitting he PHP-FFMpeg settings page with invalid values should not update the ffmpeg binary path.');
     $this->assertEqual(variable_get('php_ffmpeg_ffprobe_binary'), $php_ffmpeg_ffprobe_binary, 'Submitting he PHP-FFMpeg settings page with invalid values should not update the ffprobe path.');
@@ -111,4 +117,5 @@ class PHPFFMpegTestCase extends DrupalWebTestCase {
     $ffprobe = php_ffmpeg_probe();
     $this->assertTrue($ffprobe instanceof \FFMpeg\FFProbe, 'php_ffmpeg_probe() should return a instance of \FFMpeg\FFProbe.');
   }
+
 }

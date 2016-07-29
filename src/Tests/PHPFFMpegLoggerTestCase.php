@@ -1,18 +1,24 @@
 <?php
+namespace Drupal\php_ffmpeg\Tests;
+
 /**
- * Test case for PHPFFMpegLogger
+ * The the PHPFFMpeg Drupal watchdog to PSR-4 logger adapter.
+ *
+ * @group php_ffmpeg
  */
-class PHPFFMpegLoggerTestCase extends DrupalWebTestCase {
+class PHPFFMpegLoggerTestCase extends \Drupal\simpletest\WebTestBase {
+
+  protected $profile = 'standard';
 
   /**
    * {@inheritdoc}
    */
   public static function getInfo() {
-    return array(
+    return [
       'name' => 'PHPFFMpeg Logger wrapper',
       'description' => 'The the PHPFFMpeg Drupal watchdog to PSR-4 logger adapter.',
       'group' => 'PHPFFMpeg',
-    );
+    ];
   }
 
   /**
@@ -26,7 +32,7 @@ class PHPFFMpegLoggerTestCase extends DrupalWebTestCase {
     $type = $this->randomString();
     $logger = new PHPFFMpegLogger($type);
 
-    $levels = array(
+    $levels = [
       'emergency',
       'alert',
       'critical',
@@ -34,15 +40,15 @@ class PHPFFMpegLoggerTestCase extends DrupalWebTestCase {
       'warning',
       'notice',
       'info',
-      'debug'
-    );
+      'debug',
+    ];
 
     $account = $this->drupalCreateUser(array_keys(system_permission()));
     $this->drupalLogin($account);
-    $this->drupalPost('admin/reports/dblog', array(), 'Clear log messages');
+    $this->drupalPost('admin/reports/dblog', [], 'Clear log messages');
 
     foreach ($levels as $key => $level) {
-      $logger->{$level}('{level} log message', array('level' => $level));
+      $logger->{$level}('{level} log message', ['level' => $level]);
       $this->drupalGet('admin/reports/dblog');
       $this->clickLink("$level log message");
       $this->assertRaw("<th>Type</th><td>$type</td>", "PHPFFMpegLogger::$level() should log the message using the type passed as argument to the constructor.");
@@ -51,7 +57,9 @@ class PHPFFMpegLoggerTestCase extends DrupalWebTestCase {
     }
 
     $arbitrary_level = $this->randomName();
-    $logger->log($arbitrary_level, '{level} log message', array('level' => $arbitrary_level));
+    $logger->log($arbitrary_level, '{level} log message', [
+      'level' => $arbitrary_level
+      ]);
     $this->drupalGet('admin/reports/dblog');
     $this->clickLink("$arbitrary_level log message");
     $this->assertRaw("<th>Type</th><td>$type</td>", "PHPFFMpegLogger::log() should log the message using the type passed as argument to the constructor.");
@@ -59,4 +67,5 @@ class PHPFFMpegLoggerTestCase extends DrupalWebTestCase {
     $this->assertRaw("<th>Severity</th><td>notice</td>", "PHPFFMpegLogger::log() should log an arbitrary level message using the 'notice' severity.");
 
   }
+
 }
