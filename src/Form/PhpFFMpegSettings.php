@@ -9,7 +9,6 @@ namespace Drupal\php_ffmpeg\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Element;
 
 class PhpFFMpegSettings extends ConfigFormBase {
 
