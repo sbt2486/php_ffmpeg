@@ -3,13 +3,3 @@
  * @file
  * Hook implementations functions for the PHP-FFMpeg module.
  */
-
-/**
- * Shortcut for to access the php_ffmpeg.service class.
- *
- * @return \FFMpeg\FFMpeg
- *   An instance of the FFMpeg php integration.
- */
-function php_ffmpeg_service() {
-  return \Drupal::service('php_ffmpeg.factory')->getFFMpeg();
-}

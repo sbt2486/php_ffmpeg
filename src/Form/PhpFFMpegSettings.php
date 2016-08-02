@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\php_ffmpeg\Form\PhpFfmpegSettings.
+ * Contains \Drupal\php_ffmpeg\Form\PhpFFMpegSettings.
  */
 
 namespace Drupal\php_ffmpeg\Form;
@@ -23,28 +23,13 @@ class PhpFFMpegSettings extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    $config = $this->config('php_ffmpeg.settings');
-
-    foreach (Element::children($form) as $variable) {
-      $config->set($variable, $form_state->getValue($form[$variable]['#parents']));
-    }
-    $config->save();
-
-    if (method_exists($this, '_submitForm')) {
-      $this->_submitForm($form, $form_state);
-    }
-
-    parent::submitForm($form, $form_state);
+  protected function getEditableConfigNames() {
+    return ['php_ffmpeg.settings'];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getEditableConfigNames() {
-    return ['php_ffmpeg.settings'];
-  }
-
   public function buildForm(array $form, \Drupal\Core\Form\FormStateInterface $form_state) {
     $form = [];
     $form['php_ffmpeg_ffmpeg_binary'] = [
@@ -87,6 +72,9 @@ class PhpFFMpegSettings extends ConfigFormBase {
     return parent::buildForm($form, $form_state);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function validateForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state) {
     if ($form_state->getValue(['php_ffmpeg_ffmpeg_binary']) && !file_exists($form_state->getValue(['php_ffmpeg_ffmpeg_binary']))) {
       $form_state->setErrorByName('php_ffmpeg_ffmpeg_binary', t('File not found: @file', [
@@ -104,6 +92,18 @@ class PhpFFMpegSettings extends ConfigFormBase {
     if ($form_state->getValue(['php_ffmpeg_threads']) && (!is_numeric($form_state->getValue(['php_ffmpeg_threads'])) || $form_state->getValue(['php_ffmpeg_threads']) < 0) || (intval($form_state->getValue(['php_ffmpeg_threads'])) != $form_state->getValue(['php_ffmpeg_threads']))) {
       $form_state->setErrorByName('php_ffmpeg_threads', t('The value of the Threads field must be zero or a positive integer.'));
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $this->config('php_ffmpeg.settings')->set('php_ffmpeg_ffmpeg_binary', $form_state->getValue('php_ffmpeg_ffmpeg_binary'))
+      ->set('php_ffmpeg_ffprobe_binary', $form_state->getValue('php_ffmpeg_ffprobe_binary'))
+      ->set('php_ffmpeg_timeout', $form_state->getValue('php_ffmpeg_timeout'))
+      ->set('php_ffmpeg_threads', $form_state->getValue('php_ffmpeg_threads'))
+      ->set('php_ffmpeg_ffmpeg_binary', $form_state->getValue('php_ffmpeg_ffmpeg_binary'))
+      ->save();
   }
 
 }
