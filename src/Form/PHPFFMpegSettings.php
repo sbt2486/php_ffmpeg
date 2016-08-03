@@ -42,17 +42,22 @@ class PHPFFMpegSettings extends ConfigFormBase {
       '#default_value' => $this->config('php_ffmpeg.settings')->get('ffprobe_binary'),
     ];
     $form['execution_timeout'] = [
-      '#type' => 'textfield',
+      '#type' => 'number',
       '#title' => t('Timeout'),
       '#description' => t('Timeout for ffmpeg/ffprobe command execution in seconds. Leave empty for none.'),
       '#default_value' => $this->config('php_ffmpeg.settings')->get('execution_timeout'),
+      '#min' => 0,
+      '#step' => 1,
     ];
     $form['threads_amount'] = [
-      '#type' => 'textfield',
+      '#type' => 'number',
       '#title' => t('Threads'),
       '#description' => t('Number of threads to use for ffmpeg commands.'),
       '#default_value' => $this->config('php_ffmpeg.settings')->get('threads_amount'),
+      '#min' => 0,
+      '#step' => 1,
     ];
+
     if (function_exists('monolog_channel_info_load_all') && ($channels = monolog_channel_info_load_all())) {
       $channel_options = [NULL => t('-None-')] + array_map(function($channel) {
         return $channel['label'];
@@ -74,20 +79,22 @@ class PHPFFMpegSettings extends ConfigFormBase {
    */
   public function validateForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state) {
     if ($form_state->getValue(['ffmpeg_binary']) && !file_exists($form_state->getValue(['ffmpeg_binary']))) {
-      $form_state->setErrorByName('ffmpeg_binary', t('File not found: @file', [
-        '@file' => $form_state->getValue(['ffmpeg_binary'])
-        ]));
+      $form_state->setErrorByName(
+        'ffmpeg_binary',
+        t(
+          'File not found: @file',
+          ['@file' => $form_state->getValue(['ffmpeg_binary'])]
+        )
+      );
     }
     if ($form_state->getValue(['ffprobe_binary']) && !file_exists($form_state->getValue(['ffprobe_binary']))) {
-      $form_state->setErrorByName('ffprobe_binary', t('File not found: @file', [
-        '@file' => $form_state->getValue(['ffprobe_binary'])
-        ]));
-    }
-    if ($form_state->getValue(['execution_timeout']) && (!is_numeric($form_state->getValue(['execution_timeout'])) || $form_state->getValue(['execution_timeout']) < 0 || (intval($form_state->getValue(['execution_timeout'])) != $form_state->getValue(['execution_timeout'])))) {
-      $form_state->setErrorByName('execution_timeout', t('The value of the Timeout field must be a positive integer.'));
-    }
-    if ($form_state->getValue(['threads_amount']) && (!is_numeric($form_state->getValue(['threads_amount'])) || $form_state->getValue(['threads_amount']) < 0) || (intval($form_state->getValue(['threads_amount'])) != $form_state->getValue(['threads_amount']))) {
-      $form_state->setErrorByName('threads_amount', t('The value of the Threads field must be zero or a positive integer.'));
+      $form_state->setErrorByName(
+        'ffprobe_binary',
+        t(
+          'File not found: @file',
+          ['@file' => $form_state->getValue(['ffprobe_binary'])]
+        )
+      );
     }
   }
 
