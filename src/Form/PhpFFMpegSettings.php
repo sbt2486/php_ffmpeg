@@ -1,15 +1,13 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\php_ffmpeg\Form\PhpFFMpegSettings.
- */
-
 namespace Drupal\php_ffmpeg\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
+/**
+ * Config form for the PHP FFMPeg module's options.
+ */
 class PhpFFMpegSettings extends ConfigFormBase {
 
   /**

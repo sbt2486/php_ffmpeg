@@ -1,13 +1,9 @@
 <?php
-/**
- * @file
- * Contains service for the FFMPeg API integration.
- */
 
 namespace Drupal\php_ffmpeg;
 
 /**
- * Factory class that provides a wrapper for the FFMpeg php extension.
+ * Factory class that provides a wrapper for the FFMpeg PHP extension.
  */
 class FFMpegFactory {
 

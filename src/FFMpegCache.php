@@ -1,18 +1,11 @@
 <?php
 
-/**
- * @file
- * @todo add file description
- */
-
 namespace Drupal\php_ffmpeg;
 
 use \Doctrine\Common\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 
 /**
- * Class FFMpegCache
- *
  * Adapter between Doctrine cache needed by FFMPeg library and Drupal cache.
  */
 class FFMpegCache implements Cache {

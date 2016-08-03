@@ -1,4 +1,5 @@
 <?php
+
 namespace Drupal\php_ffmpeg\Tests;
 
 use \Drupal\simpletest\WebTestBase;
