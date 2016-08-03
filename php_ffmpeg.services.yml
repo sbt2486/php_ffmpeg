@@ -6,4 +6,4 @@ services:
     class: Drupal\php_ffmpeg\FFMpegFactory
   php_ffmpeg.cache:
     class: Drupal\php_ffmpeg\FFMpegCache
-    arguments: ['@cache.default']
+    arguments: ['@cache.default', 'php_ffmpeg']
