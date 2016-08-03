@@ -8,7 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Config form for the PHP FFMPeg module's options.
  */
-class PhpFFMpegSettings extends ConfigFormBase {
+class PHPFFMpegSettings extends ConfigFormBase {
 
   /**
    * {@inheritdoc}

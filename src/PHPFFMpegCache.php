@@ -2,13 +2,13 @@
 
 namespace Drupal\php_ffmpeg;
 
-use \Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 
 /**
  * Adapter between Doctrine cache needed by FFMPeg library and Drupal cache.
  */
-class FFMpegCache implements Cache {
+class PHPFFMpegCache implements Cache {
 
   /**
    * The cache backend that should be used.

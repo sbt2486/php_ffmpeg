@@ -1,9 +1,15 @@
 services:
   php_ffmpeg:
+    abstract: true
     class: \FFMpeg\FFMpeg
     factory: php_ffmpeg.factory:getFFMpeg
   php_ffmpeg.factory:
-    class: Drupal\php_ffmpeg\FFMpegFactory
+    class: Drupal\php_ffmpeg\PHPFFMpegFactory
+    arguments: ['@php_ffmpeg.cache', '@php_ffmpeg.logger']
   php_ffmpeg.cache:
-    class: Drupal\php_ffmpeg\FFMpegCache
+    class: Drupal\php_ffmpeg\PHPFFMpegCache
     arguments: ['@cache.default', 'php_ffmpeg']
+  php_ffmpeg.logger:
+    class: Drupal\Core\Logger\LoggerChannel
+    factory: logger.factory:get
+    arguments: ['php_ffmpeg']
