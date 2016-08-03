@@ -2,6 +2,7 @@
 
 namespace Drupal\php_ffmpeg;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Doctrine\Common\Cache\Cache;
 
@@ -26,16 +27,26 @@ class PHPFFMpegFactory {
   protected $logger;
 
   /**
-   * Constructs a CacheCollector object.
+   * The config object providing the module's config.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
+  protected $config;
+
+  /**
+   * Constructs a the factory object with injected dependencies.
    *
    * @param \Doctrine\Common\Cache\Cache $cache
    *   The cache backend.
    * @param Drupal\Core\Logger\LoggerChannelInterface $logger
    *   Prefix used for appending to cached item identifiers.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   A configuration factory instance.
    */
-  public function __construct(Cache $cache, LoggerChannelInterface $logger) {
+  public function __construct(Cache $cache, LoggerChannelInterface $logger, ConfigFactoryInterface $config_factory) {
     $this->cache = $cache;
     $this->logger = $logger;
+    $this->config = $config_factory->getEditable('php_ffmpeg.settings');
   }
 
   /**
@@ -80,10 +91,10 @@ class PHPFFMpegFactory {
    */
   protected function getFFMpegConfig() {
     return array_filter(array(
-      'ffmpeg.binaries'  => \Drupal::config('php_ffmpeg.settings')->get('ffmpeg_binary'),
-      'ffprobe.binaries' => \Drupal::config('php_ffmpeg.settings')->get('ffprobe_binary'),
-      'timeout'          => \Drupal::config('php_ffmpeg.settings')->get('execution_timeout'),
-      'ffmpeg.threads'   => \Drupal::config('php_ffmpeg.settings')->get('threads_amount'),
+      'ffmpeg.binaries'  => $this->config->get('ffmpeg_binary'),
+      'ffprobe.binaries' => $this->config->get('ffprobe_binary'),
+      'timeout'          => $this->config->get('execution_timeout'),
+      'ffmpeg.threads'   => $this->config->get('threads_amount'),
     ));
   }
 

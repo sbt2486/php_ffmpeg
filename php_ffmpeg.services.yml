@@ -5,11 +5,11 @@ services:
     factory: php_ffmpeg.factory:getFFMpeg
   php_ffmpeg.factory:
     class: Drupal\php_ffmpeg\PHPFFMpegFactory
-    arguments: ['@php_ffmpeg.cache', '@php_ffmpeg.logger']
+    arguments: ['@php_ffmpeg.cache', '@logger.channel.php_ffmpeg', '@config.factory']
   php_ffmpeg.cache:
     class: Drupal\php_ffmpeg\PHPFFMpegCache
     arguments: ['@cache.default', 'php_ffmpeg']
-  php_ffmpeg.logger:
+  logger.channel.php_ffmpeg:
     class: Drupal\Core\Logger\LoggerChannel
     factory: logger.factory:get
     arguments: ['php_ffmpeg']
