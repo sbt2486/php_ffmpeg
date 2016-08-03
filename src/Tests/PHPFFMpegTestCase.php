@@ -25,57 +25,56 @@ class PHPFFMpegTestCase extends WebTestBase {
   public function testAdminPage() {
     $account = $this->drupalCreateUser([], NULL, TRUE);
 
-    $php_ffmpeg_ffmpeg_binary = $this->randomString();
-    $php_ffmpeg_ffprobe_binary = $this->randomString();
-    $php_ffmpeg_timeout = mt_rand(1, 42);
-    $php_ffmpeg_threads = mt_rand(1, 42);
+    $ffmpeg_binary = $this->randomString();
+    $ffprobe_binary = $this->randomString();
+    $execution_timeout = mt_rand(1, 42);
+    $threads_amount = mt_rand(1, 42);
 
     $this->config('php_ffmpeg.settings')
-      ->set('php_ffmpeg_ffmpeg_binary', $php_ffmpeg_ffmpeg_binary)
-      ->set('php_ffmpeg_ffprobe_binary', $php_ffmpeg_ffprobe_binary)
-      ->set('php_ffmpeg_timeout', $php_ffmpeg_timeout)
-      ->set('php_ffmpeg_threads', $php_ffmpeg_threads)
+      ->set('ffmpeg_binary', $ffmpeg_binary)
+      ->set('ffprobe_binary', $ffprobe_binary)
+      ->set('execution_timeout', $execution_timeout)
+      ->set('threads_amount', $threads_amount)
       ->save();
-    $settings = $this->config('php_ffmpeg.settings');
 
     $this->drupalLogin($account);
     $this->drupalGet('admin/config/development/php-ffmpeg');
 
-    $this->assertFieldByName('php_ffmpeg_ffmpeg_binary', $php_ffmpeg_ffmpeg_binary, 'The PHP-FFMpeg settings page should provide a field for the ffmpeg binary path.');
-    $this->assertFieldByName('php_ffmpeg_ffprobe_binary', $php_ffmpeg_ffprobe_binary, 'The PHP-FFMpeg settings page should provide a field for the ffprobe binary path.');
-    $this->assertFieldByName('php_ffmpeg_timeout', $php_ffmpeg_timeout, 'The PHP-FFMpeg settings page should provide a field for the ffmpeg command timeout.');
-    $this->assertFieldByName('php_ffmpeg_threads', $php_ffmpeg_threads, 'The PHP-FFMpeg settings page should provide a field for the number of threads to use for ffmpeg commands.');
+    $this->assertFieldByName('ffmpeg_binary', $ffmpeg_binary, 'The PHP-FFMpeg settings page should provide a field for the ffmpeg binary path.');
+    $this->assertFieldByName('ffprobe_binary', $ffprobe_binary, 'The PHP-FFMpeg settings page should provide a field for the ffprobe binary path.');
+    $this->assertFieldByName('execution_timeout', $execution_timeout, 'The PHP-FFMpeg settings page should provide a field for the ffmpeg command timeout.');
+    $this->assertFieldByName('threads_amount', $threads_amount, 'The PHP-FFMpeg settings page should provide a field for the number of threads to use for ffmpeg commands.');
 
-    $php_ffmpeg_ffmpeg_binary = drupal_realpath($this->drupalGetTestFiles('binary')[0]->uri);
-    $php_ffmpeg_ffprobe_binary = drupal_realpath($this->drupalGetTestFiles('binary')[1]->uri);
-    $php_ffmpeg_timeout = mt_rand(1, 42);
-    $php_ffmpeg_threads = mt_rand(1, 42);
+    $ffmpeg_binary = drupal_realpath($this->drupalGetTestFiles('binary')[0]->uri);
+    $ffprobe_binary = drupal_realpath($this->drupalGetTestFiles('binary')[1]->uri);
+    $execution_timeout = mt_rand(1, 42);
+    $threads_amount = mt_rand(1, 42);
 
     $this->drupalPostForm(NULL, [
-      'php_ffmpeg_ffmpeg_binary' => $php_ffmpeg_ffmpeg_binary,
-      'php_ffmpeg_ffprobe_binary' => $php_ffmpeg_ffprobe_binary,
-      'php_ffmpeg_timeout' => $php_ffmpeg_timeout,
-      'php_ffmpeg_threads' => $php_ffmpeg_threads,
+      'ffmpeg_binary' => $ffmpeg_binary,
+      'ffprobe_binary' => $ffprobe_binary,
+      'execution_timeout' => $execution_timeout,
+      'threads_amount' => $threads_amount,
     ], 'Save configuration');
     $settings = $this->config('php_ffmpeg.settings');
 
-    $this->assertFieldByName('php_ffmpeg_ffmpeg_binary', $php_ffmpeg_ffmpeg_binary, 'Submitting he PHP-FFMpeg settings page should update the value of the field for the ffmpeg binary path.');
-    $this->assertFieldByName('php_ffmpeg_ffprobe_binary', $php_ffmpeg_ffprobe_binary, 'Submitting he PHP-FFMpeg settings page should update the value of the field for the ffprobe binary path.');
-    $this->assertFieldByName('php_ffmpeg_timeout', $php_ffmpeg_timeout, 'Submitting he PHP-FFMpeg settings page should update the value of the field for the ffmpeg command timeout.');
-    $this->assertFieldByName('php_ffmpeg_threads', $php_ffmpeg_threads, 'Submitting he PHP-FFMpeg settings page should update the value of the field for the number of threads to use for ffmpeg commands.');
+    $this->assertFieldByName('ffmpeg_binary', $ffmpeg_binary, 'Submitting he PHP-FFMpeg settings page should update the value of the field for the ffmpeg binary path.');
+    $this->assertFieldByName('ffprobe_binary', $ffprobe_binary, 'Submitting he PHP-FFMpeg settings page should update the value of the field for the ffprobe binary path.');
+    $this->assertFieldByName('execution_timeout', $execution_timeout, 'Submitting he PHP-FFMpeg settings page should update the value of the field for the ffmpeg command timeout.');
+    $this->assertFieldByName('threads_amount', $threads_amount, 'Submitting he PHP-FFMpeg settings page should update the value of the field for the number of threads to use for ffmpeg commands.');
 
-    $this->assertEqual($settings->get('php_ffmpeg_ffmpeg_binary'), $php_ffmpeg_ffmpeg_binary, 'Submitting he PHP-FFMpeg settings page should update the ffmpeg binary path.');
-    $this->assertEqual($settings->get('php_ffmpeg_ffprobe_binary'), $php_ffmpeg_ffprobe_binary, 'Submitting he PHP-FFMpeg settings page should update the ffproe binary path.');
-    $this->assertEqual($settings->get('php_ffmpeg_timeout'), $php_ffmpeg_timeout, 'Submitting he PHP-FFMpeg settings page should update the ffmpeg command timeout.');
-    $this->assertEqual($settings->get('php_ffmpeg_threads'), $php_ffmpeg_threads, 'Submitting he PHP-FFMpeg settings page should update the number of threads to use for ffmpeg commands.');
+    $this->assertEqual($settings->get('ffmpeg_binary'), $ffmpeg_binary, 'Submitting he PHP-FFMpeg settings page should update the ffmpeg binary path.');
+    $this->assertEqual($settings->get('ffprobe_binary'), $ffprobe_binary, 'Submitting he PHP-FFMpeg settings page should update the ffproe binary path.');
+    $this->assertEqual($settings->get('execution_timeout'), $execution_timeout, 'Submitting he PHP-FFMpeg settings page should update the ffmpeg command timeout.');
+    $this->assertEqual($settings->get('threads_amount'), $threads_amount, 'Submitting he PHP-FFMpeg settings page should update the number of threads to use for ffmpeg commands.');
 
     $invalidFilenames = [$this->randomMachineName(), $this->randomMachineName()];
 
     $this->drupalPostForm(NULL, [
-      'php_ffmpeg_ffmpeg_binary' => $invalidFilenames[0],
-      'php_ffmpeg_ffprobe_binary' => $invalidFilenames[1],
-      'php_ffmpeg_timeout' => $this->randomString(),
-      'php_ffmpeg_threads' => $this->randomString(),
+      'ffmpeg_binary' => $invalidFilenames[0],
+      'ffprobe_binary' => $invalidFilenames[1],
+      'execution_timeout' => $this->randomString(),
+      'threads_amount' => $this->randomString(),
     ], 'Save configuration');
     $settings = $this->config('php_ffmpeg.settings');
 
@@ -84,10 +83,10 @@ class PHPFFMpegTestCase extends WebTestBase {
     $this->assertText('The value of the Timeout field must be a positive integer.', "Submission of the the PHP-FFMpeg settings page should validate the ffmpeg command timeout is a positive integer.");
     $this->assertText('The value of the Threads field must be zero or a positive integer.', "Submission of the the PHP-FFMpeg settings page should validate the ffmpeg command threads number is a positive integer.");
 
-    $this->assertEqual($settings->get('php_ffmpeg_ffmpeg_binary'), $php_ffmpeg_ffmpeg_binary, 'Submitting he PHP-FFMpeg settings page with invalid values should not update the ffmpeg binary path.');
-    $this->assertEqual($settings->get('php_ffmpeg_ffprobe_binary'), $php_ffmpeg_ffprobe_binary, 'Submitting he PHP-FFMpeg settings page with invalid values should not update the ffprobe path.');
-    $this->assertEqual($settings->get('php_ffmpeg_timeout'), $php_ffmpeg_timeout, 'Submitting he PHP-FFMpeg settings page with invalid values should not update the ffmpeg command time path.');
-    $this->assertEqual($settings->get('php_ffmpeg_threads'), $php_ffmpeg_threads, 'Submitting he PHP-FFMpeg settings page with invalid values should not update the ffmpeg command threads number.');
+    $this->assertEqual($settings->get('ffmpeg_binary'), $ffmpeg_binary, 'Submitting he PHP-FFMpeg settings page with invalid values should not update the ffmpeg binary path.');
+    $this->assertEqual($settings->get('ffprobe_binary'), $ffprobe_binary, 'Submitting he PHP-FFMpeg settings page with invalid values should not update the ffprobe path.');
+    $this->assertEqual($settings->get('execution_timeout'), $execution_timeout, 'Submitting he PHP-FFMpeg settings page with invalid values should not update the ffmpeg command time path.');
+    $this->assertEqual($settings->get('threads_amount'), $threads_amount, 'Submitting he PHP-FFMpeg settings page with invalid values should not update the ffmpeg command threads number.');
 
   }
 
@@ -95,8 +94,8 @@ class PHPFFMpegTestCase extends WebTestBase {
     chmod(drupal_realpath($this->drupalGetTestFiles('binary')[0]->uri), 0777);
     chmod(drupal_realpath($this->drupalGetTestFiles('binary')[1]->uri), 0777);
     $this->config('php_ffmpeg.settings')
-      ->set('php_ffmpeg_ffmpeg_binary', drupal_realpath($this->drupalGetTestFiles('binary')[0]->uri))
-      ->set('php_ffmpeg_ffprobe_binary', drupal_realpath($this->drupalGetTestFiles('binary')[1]->uri))
+      ->set('ffmpeg_binary', drupal_realpath($this->drupalGetTestFiles('binary')[0]->uri))
+      ->set('ffprobe_binary', drupal_realpath($this->drupalGetTestFiles('binary')[1]->uri))
       ->save();
 
     /** @var \FFMpeg\FFMpeg $ffmpeg */

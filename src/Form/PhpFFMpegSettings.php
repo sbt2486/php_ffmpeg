@@ -31,39 +31,39 @@ class PhpFFMpegSettings extends ConfigFormBase {
    */
   public function buildForm(array $form, \Drupal\Core\Form\FormStateInterface $form_state) {
     $form = [];
-    $form['php_ffmpeg_ffmpeg_binary'] = [
+    $form['ffmpeg_binary'] = [
       '#type' => 'textfield',
       '#title' => t('ffmpeg binary'),
       '#description' => t('Path to the ffmpeg binary. Leave empty if the binary is located within system PATH.'),
-      '#default_value' => $this->config('php_ffmpeg.settings')->get('php_ffmpeg_ffmpeg_binary'),
+      '#default_value' => $this->config('php_ffmpeg.settings')->get('ffmpeg_binary'),
     ];
-    $form['php_ffmpeg_ffprobe_binary'] = [
+    $form['ffprobe_binary'] = [
       '#type' => 'textfield',
       '#title' => t('ffprobe binary'),
       '#description' => t('Path to the ffprobe binary. Leave empty if the binary is located within system PATH.'),
-      '#default_value' => $this->config('php_ffmpeg.settings')->get('php_ffmpeg_ffprobe_binary'),
+      '#default_value' => $this->config('php_ffmpeg.settings')->get('ffprobe_binary'),
     ];
-    $form['php_ffmpeg_timeout'] = [
+    $form['execution_timeout'] = [
       '#type' => 'textfield',
       '#title' => t('Timeout'),
       '#description' => t('Timeout for ffmpeg/ffprobe command execution in seconds. Leave empty for none.'),
-      '#default_value' => $this->config('php_ffmpeg.settings')->get('php_ffmpeg_timeout'),
+      '#default_value' => $this->config('php_ffmpeg.settings')->get('execution_timeout'),
     ];
-    $form['php_ffmpeg_threads'] = [
+    $form['threads_amount'] = [
       '#type' => 'textfield',
       '#title' => t('Threads'),
       '#description' => t('Number of threads to use for ffmpeg commands.'),
-      '#default_value' => $this->config('php_ffmpeg.settings')->get('php_ffmpeg_threads'),
+      '#default_value' => $this->config('php_ffmpeg.settings')->get('threads_amount'),
     ];
     if (function_exists('monolog_channel_info_load_all') && ($channels = monolog_channel_info_load_all())) {
       $channel_options = [NULL => t('-None-')] + array_map(function($channel) {
         return $channel['label'];
       }, $channels);
-      $form['php_ffmpeg_monolog_channel'] = [
+      $form['monolog_channel'] = [
         '#type' => 'select',
         '#title' => t('Monolog channel'),
         '#description' => t('Select the monolog channel to use for logging.'),
-        '#default_value' => $this->config('php_ffmpeg.settings')->get('php_ffmpeg_monolog_channel'),
+        '#default_value' => $this->config('php_ffmpeg.settings')->get('monolog_channel'),
         '#options' => $channel_options,
       ];
     }
@@ -75,21 +75,21 @@ class PhpFFMpegSettings extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state) {
-    if ($form_state->getValue(['php_ffmpeg_ffmpeg_binary']) && !file_exists($form_state->getValue(['php_ffmpeg_ffmpeg_binary']))) {
-      $form_state->setErrorByName('php_ffmpeg_ffmpeg_binary', t('File not found: @file', [
-        '@file' => $form_state->getValue(['php_ffmpeg_ffmpeg_binary'])
+    if ($form_state->getValue(['ffmpeg_binary']) && !file_exists($form_state->getValue(['ffmpeg_binary']))) {
+      $form_state->setErrorByName('ffmpeg_binary', t('File not found: @file', [
+        '@file' => $form_state->getValue(['ffmpeg_binary'])
         ]));
     }
-    if ($form_state->getValue(['php_ffmpeg_ffprobe_binary']) && !file_exists($form_state->getValue(['php_ffmpeg_ffprobe_binary']))) {
-      $form_state->setErrorByName('php_ffmpeg_ffprobe_binary', t('File not found: @file', [
-        '@file' => $form_state->getValue(['php_ffmpeg_ffprobe_binary'])
+    if ($form_state->getValue(['ffprobe_binary']) && !file_exists($form_state->getValue(['ffprobe_binary']))) {
+      $form_state->setErrorByName('ffprobe_binary', t('File not found: @file', [
+        '@file' => $form_state->getValue(['ffprobe_binary'])
         ]));
     }
-    if ($form_state->getValue(['php_ffmpeg_timeout']) && (!is_numeric($form_state->getValue(['php_ffmpeg_timeout'])) || $form_state->getValue(['php_ffmpeg_timeout']) < 0 || (intval($form_state->getValue(['php_ffmpeg_timeout'])) != $form_state->getValue(['php_ffmpeg_timeout'])))) {
-      $form_state->setErrorByName('php_ffmpeg_timeout', t('The value of the Timeout field must be a positive integer.'));
+    if ($form_state->getValue(['execution_timeout']) && (!is_numeric($form_state->getValue(['execution_timeout'])) || $form_state->getValue(['execution_timeout']) < 0 || (intval($form_state->getValue(['execution_timeout'])) != $form_state->getValue(['execution_timeout'])))) {
+      $form_state->setErrorByName('execution_timeout', t('The value of the Timeout field must be a positive integer.'));
     }
-    if ($form_state->getValue(['php_ffmpeg_threads']) && (!is_numeric($form_state->getValue(['php_ffmpeg_threads'])) || $form_state->getValue(['php_ffmpeg_threads']) < 0) || (intval($form_state->getValue(['php_ffmpeg_threads'])) != $form_state->getValue(['php_ffmpeg_threads']))) {
-      $form_state->setErrorByName('php_ffmpeg_threads', t('The value of the Threads field must be zero or a positive integer.'));
+    if ($form_state->getValue(['threads_amount']) && (!is_numeric($form_state->getValue(['threads_amount'])) || $form_state->getValue(['threads_amount']) < 0) || (intval($form_state->getValue(['threads_amount'])) != $form_state->getValue(['threads_amount']))) {
+      $form_state->setErrorByName('threads_amount', t('The value of the Threads field must be zero or a positive integer.'));
     }
   }
 
@@ -97,11 +97,11 @@ class PhpFFMpegSettings extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->config('php_ffmpeg.settings')->set('php_ffmpeg_ffmpeg_binary', $form_state->getValue('php_ffmpeg_ffmpeg_binary'))
-      ->set('php_ffmpeg_ffprobe_binary', $form_state->getValue('php_ffmpeg_ffprobe_binary'))
-      ->set('php_ffmpeg_timeout', $form_state->getValue('php_ffmpeg_timeout'))
-      ->set('php_ffmpeg_threads', $form_state->getValue('php_ffmpeg_threads'))
-      ->set('php_ffmpeg_ffmpeg_binary', $form_state->getValue('php_ffmpeg_ffmpeg_binary'))
+    $this->config('php_ffmpeg.settings')->set('ffmpeg_binary', $form_state->getValue('ffmpeg_binary'))
+      ->set('ffprobe_binary', $form_state->getValue('ffprobe_binary'))
+      ->set('execution_timeout', $form_state->getValue('execution_timeout'))
+      ->set('threads_amount', $form_state->getValue('threads_amount'))
+      ->set('ffmpeg_binary', $form_state->getValue('ffmpeg_binary'))
       ->save();
   }
 

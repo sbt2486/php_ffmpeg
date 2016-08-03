@@ -1,5 +1,5 @@
-php_ffmpeg_ffmpeg_binary: ''
-php_ffmpeg_ffprobe_binary: ''
-php_ffmpeg_timeout: 0
-php_ffmpeg_threads: 0
-php_ffmpeg_monolog_channel: null
+ffmpeg_binary: ''
+ffprobe_binary: ''
+execution_timeout: 0
+threads_amount: 0
+monolog_channel: null

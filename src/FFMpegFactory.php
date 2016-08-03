@@ -53,10 +53,10 @@ class FFMpegFactory {
    */
   protected function getFFMpegConfig() {
     return array_filter(array(
-      'ffmpeg.binaries'  => \Drupal::config('php_ffmpeg.settings')->get('php_ffmpeg_ffmpeg_binary'),
-      'ffprobe.binaries' => \Drupal::config('php_ffmpeg.settings')->get('php_ffmpeg_ffprobe_binary'),
-      'timeout'          => \Drupal::config('php_ffmpeg.settings')->get('php_ffmpeg_timeout'),
-      'ffmpeg.threads'   => \Drupal::config('php_ffmpeg.settings')->get('php_ffmpeg_threads'),
+      'ffmpeg.binaries'  => \Drupal::config('php_ffmpeg.settings')->get('ffmpeg_binary'),
+      'ffprobe.binaries' => \Drupal::config('php_ffmpeg.settings')->get('ffprobe_binary'),
+      'timeout'          => \Drupal::config('php_ffmpeg.settings')->get('execution_timeout'),
+      'ffmpeg.threads'   => \Drupal::config('php_ffmpeg.settings')->get('threads_amount'),
     ));
   }
 
