@@ -11,7 +11,7 @@ use \Drupal\simpletest\WebTestBase;
  */
 class PHPFFMpegTestCase extends WebTestBase {
 
-  protected $profile = 'standard';
+  protected $profile = 'testing';
 
   /**
    * Modules to install.
@@ -21,7 +21,7 @@ class PHPFFMpegTestCase extends WebTestBase {
   public static $modules = ['php_ffmpeg'];
 
   /**
-   * Boring tests of the administration page.
+   * Tests of the administration page.
    */
   public function testAdminPage() {
     $account = $this->drupalCreateUser([], NULL, TRUE);
@@ -81,16 +81,15 @@ class PHPFFMpegTestCase extends WebTestBase {
 
     $this->assertText("File not found: $invalidFilenames[0]", "Submission of the the PHP-FFMpeg settings page should validate the ffmpeg binary path is an existing file.");
     $this->assertText("File not found: $invalidFilenames[1]", "Submission of the the PHP-FFMpeg settings page should validate the ffprobe binary path is an existing file.");
-    $this->assertText('The value of the Timeout field must be a positive integer.', "Submission of the the PHP-FFMpeg settings page should validate the ffmpeg command timeout is a positive integer.");
-    $this->assertText('The value of the Threads field must be zero or a positive integer.', "Submission of the the PHP-FFMpeg settings page should validate the ffmpeg command threads number is a positive integer.");
-
     $this->assertEqual($settings->get('ffmpeg_binary'), $ffmpeg_binary, 'Submitting he PHP-FFMpeg settings page with invalid values should not update the ffmpeg binary path.');
     $this->assertEqual($settings->get('ffprobe_binary'), $ffprobe_binary, 'Submitting he PHP-FFMpeg settings page with invalid values should not update the ffprobe path.');
     $this->assertEqual($settings->get('execution_timeout'), $execution_timeout, 'Submitting he PHP-FFMpeg settings page with invalid values should not update the ffmpeg command time path.');
     $this->assertEqual($settings->get('threads_amount'), $threads_amount, 'Submitting he PHP-FFMpeg settings page with invalid values should not update the ffmpeg command threads number.');
-
   }
 
+  /**
+   * Checks whether configuring of binaries' paths is working.
+   */
   public function testFactories() {
     chmod(drupal_realpath($this->drupalGetTestFiles('binary')[0]->uri), 0777);
     chmod(drupal_realpath($this->drupalGetTestFiles('binary')[1]->uri), 0777);

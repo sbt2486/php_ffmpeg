@@ -1,6 +1,5 @@
 services:
   php_ffmpeg:
-    abstract: true
     class: \FFMpeg\FFMpeg
     factory: php_ffmpeg.factory:getFFMpeg
   php_ffmpeg.factory:
