@@ -1,0 +1,64 @@
+<?php
+
+use \Drupal\KernelTests\KernelTestBase;
+use \Drupal\php_ffmpeg\PHPFFMpegCache;
+use \Drupal\Core\Cache\MemoryBackend;
+
+/**
+ * Unit test for PHPFFMpegCache.
+ */
+class PHPFFMpegCacheTest extends KernelTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = ['php_ffmpeg'];
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+    $this->backend = new MemoryBackend('php_ffmpeg');
+    $this->prefix = $this->randomString();
+    $this->cache = new PHPFFMpegCache($this->backend, $this->prefix);
+  }
+
+  public function testFetch() {
+    $cid = $this->randomString();
+    $value = $this->randomString();
+    $this->backend->set("{$this->prefix}:{$cid}", $value);
+    self::assertEquals($this->cache->fetch($cid)->data, $value, 'PHPFFMpeg::get() should return the value stored in the backend when it exists.');
+    $this->assertFalse($this->cache->fetch($this->randomString()), 'PHPFFMpeg::get() should return FALSE when no value exist in the backend.');
+  }
+
+  public function testContains() {
+    $cid = $this->randomString();
+    $value = $this->randomString();
+    $this->backend->set("{$this->prefix}:{$cid}", $value);
+    self::assertSame($this->cache->contains($cid), TRUE, 'PHPFFMpeg::contains() should return TRUE when a value exists in the backend.');
+    self::assertSame($this->cache->contains($this->randomString()), FALSE, 'PHPFFMpeg::contains() should return FALSE when no value exist in the backend.');
+  }
+
+  public function testSave() {
+    $cid = $this->randomString();
+    $value = $this->randomString();
+    $this->cache->save($cid, $value);
+    self::assertEquals($this->backend->get("{$this->prefix}:{$cid}")->data, $value, 'PHPFFMpeg::save() should set the value in the backend.');
+  }
+
+  public function testDelete() {
+    $cid = $this->randomString();
+    $value = $this->randomString();
+    $this->backend->set("{$this->prefix}:{$cid}", $value);
+    $this->cache->delete($cid);
+    self::assertSame($this->backend->get("{$this->prefix}:{$cid}"), FALSE, 'PHPFFMpeg::delete() should clear the value in the backend.');
+  }
+
+  public function testGetStats() {
+    self::assertSame($this->cache->getStats(), NULL, 'PHPFFMpeg::getStats() should return NULL.');
+  }
+
+}
